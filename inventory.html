@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Inventory · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Inventory</h1><p>Track stock and reorder points.</p></div></div>
+<section class="panel">
+<h2>Add Product</h2>
+<form method="post" action="{{ url_for('add_product') }}" class="form-grid">
+<input name="sku" placeholder="SKU" required>
+<input name="name" placeholder="Product name" required>
+<input name="category" placeholder="Category">
+<select name="supplier_id"><option value="">Supplier</option>{% for s in suppliers %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select>
+<input name="stock" type="number" min="0" placeholder="Stock" value="0">
+<input name="reorder_level" type="number" min="0" placeholder="Reorder level" value="10">
+<input name="unit_cost" type="number" min="0" step="0.01" placeholder="Unit cost" value="0">
+<button>Add Product</button>
+</form>
+</section>
+<section class="panel">
+<table><tr><th>SKU</th><th>Product</th><th>Category</th><th>Supplier</th><th>Stock</th><th>Reorder</th><th>Value</th><th>Adjust</th></tr>
+{% for p in products %}
+<tr>
+<td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.category or "—" }}</td><td>{{ p.supplier_name or "—" }}</td>
+<td><strong>{{ p.stock }}</strong></td><td>{{ p.reorder_level }}</td><td>₹{{ "%.2f"|format(p.stock*p.unit_cost) }}</td>
+<td><form method="post" action="{{ url_for('update_stock', product_id=p.id) }}" class="inline"><input name="amount" type="number" placeholder="+/-" required><button>Update</button></form></td>
+</tr>
+{% endfor %}
+</table>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Supply Chain Dashboard</h1><p>Monitor inventory, suppliers, orders and logistics in one place.</p></div>
+</div>
+<section class="cards">
+  <div class="card"><small>Products</small><strong>{{ stats.products }}</strong></div>
+  <div class="card"><small>Suppliers</small><strong>{{ stats.suppliers }}</strong></div>
+  <div class="card warn"><small>Low Stock</small><strong>{{ stats.low_stock }}</strong></div>
+  <div class="card"><small>Purchase Orders</small><strong>{{ stats.orders }}</strong></div>
+  <div class="card"><small>Inventory Value</small><strong>₹{{ "%.2f"|format(stats.inventory_value) }}</strong></div>
+</section>
+
+<div class="grid two">
+<section class="panel">
+<h2>Inventory Watchlist</h2>
+<table><tr><th>SKU</th><th>Product</th><th>Stock</th><th>Status</th></tr>
+{% for p in products[:8] %}
+<tr><td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.stock }}</td>
+<td>{% if p.stock <= p.reorder_level %}<span class="badge danger">Reorder</span>{% else %}<span class="badge success">Healthy</span>{% endif %}</td></tr>
+{% else %}<tr><td colspan="4">No products yet.</td></tr>{% endfor %}
+</table>
+</section>
+
+<section class="panel">
+<h2>Recent Shipments</h2>
+<table><tr><th>Tracking</th><th>PO</th><th>Status</th></tr>
+{% for s in shipments %}
+<tr><td>{{ s.tracking_no }}</td><td>{{ s.po_number }}</td><td><span class="badge">{{ s.status }}</span></td></tr>
+{% else %}<tr><td colspan="3">No shipments yet.</td></tr>{% endfor %}
+</table>
+</section>
+</div>
+
+<section class="panel">
+<h2>Recent Purchase Orders</h2>
+<table><tr><th>PO</th><th>Supplier</th><th>Date</th><th>Expected</th><th>Status</th><th>Total</th></tr>
+{% for o in orders %}
+<tr><td>{{ o.po_number }}</td><td>{{ o.supplier_name }}</td><td>{{ o.order_date }}</td><td>{{ o.expected_date or "—" }}</td><td>{{ o.status }}</td><td>₹{{ "%.2f"|format(o.total) }}</td></tr>
+{% else %}<tr><td colspan="6">No purchase orders yet.</td></tr>{% endfor %}
+</table>
+</section>
+{% endblock %}

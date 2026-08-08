@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Risk · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Supplier Risk</h1><p>A transparent rule-based risk score using lead time, on-time delivery and quality.</p></div></div>
+<section class="panel">
+<table><tr><th>Supplier</th><th>Risk Score</th><th>Level</th><th>Lead Time</th><th>On-time</th><th>Quality</th><th>Recommended Action</th></tr>
+{% for s in suppliers %}
+<tr><td>{{ s.name }}</td><td>{{ s.risk }}/100</td>
+<td><span class="badge {% if s.risk_level=='High' %}danger{% elif s.risk_level=='Medium' %}warn{% else %}success{% endif %}">{{ s.risk_level }}</span></td>
+<td>{{ s.lead_time }} days</td><td>{{ s.on_time_rate }}%</td><td>{{ s.quality_rate }}%</td>
+<td>{% if s.risk_level=='High' %}Review supplier / add backup source{% elif s.risk_level=='Medium' %}Monitor performance{% else %}Continue monitoring{% endif %}</td></tr>
+{% endfor %}</table>
+</section>
+<div class="panel note"><strong>Scoring model:</strong> Higher delays, lower on-time delivery and lower quality increase the score. This is a starter model intended for learning and can be replaced with a more advanced analytics model later.</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Suppliers · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Suppliers</h1><p>Manage supplier performance and reliability.</p></div></div>
+<section class="panel">
+<h2>Add Supplier</h2>
+<form method="post" action="{{ url_for('add_supplier') }}" class="form-grid">
+<input name="name" placeholder="Supplier name" required>
+<input name="contact" placeholder="Contact person">
+<input name="email" type="email" placeholder="Email">
+<input name="lead_time" type="number" min="0" placeholder="Lead time (days)" value="7">
+<input name="on_time_rate" type="number" min="0" max="100" step="0.1" placeholder="On-time %" value="90">
+<input name="quality_rate" type="number" min="0" max="100" step="0.1" placeholder="Quality %" value="95">
+<button>Add Supplier</button>
+</form>
+</section>
+<section class="panel">
+<table><tr><th>Supplier</th><th>Contact</th><th>Lead Time</th><th>On-time</th><th>Quality</th><th>Risk</th></tr>
+{% for s in suppliers %}
+<tr><td>{{ s.name }}</td><td>{{ s.contact or "—" }}</td><td>{{ s.lead_time }} days</td><td>{{ s.on_time_rate }}%</td><td>{{ s.quality_rate }}%</td>
+<td><span class="badge {% if s.risk_level=='High' %}danger{% elif s.risk_level=='Medium' %}warn{% else %}success{% endif %}">{{ s.risk_level }} ({{ s.risk }})</span></td></tr>
+{% endfor %}</table>
+</section>
+{% endblock %}

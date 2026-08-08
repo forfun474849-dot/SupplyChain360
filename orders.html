@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Orders · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Purchase Orders</h1><p>Create and monitor procurement orders.</p></div></div>
+<section class="panel">
+<h2>Create Purchase Order</h2>
+<form method="post" action="{{ url_for('add_order') }}" class="form-grid">
+<input name="po_number" placeholder="PO number" required>
+<select name="supplier_id" required><option value="">Supplier</option>{% for s in suppliers %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select>
+<input name="order_date" type="date">
+<input name="expected_date" type="date">
+<select name="status"><option>Pending</option><option>Approved</option><option>Received</option><option>Cancelled</option></select>
+<input name="total" type="number" min="0" step="0.01" placeholder="Total value">
+<button>Create PO</button>
+</form>
+</section>
+<section class="panel"><table>
+<tr><th>PO</th><th>Supplier</th><th>Order Date</th><th>Expected</th><th>Status</th><th>Total</th></tr>
+{% for o in orders %}<tr><td>{{ o.po_number }}</td><td>{{ o.supplier_name }}</td><td>{{ o.order_date }}</td><td>{{ o.expected_date or "—" }}</td><td>{{ o.status }}</td><td>₹{{ "%.2f"|format(o.total) }}</td></tr>{% endfor %}
+</table></section>
+{% endblock %}

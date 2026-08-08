@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Shipments · SupplyChain360{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Shipments</h1><p>Track inbound logistics and delivery status.</p></div></div>
+<section class="panel">
+<h2>Add Shipment</h2>
+<form method="post" action="{{ url_for('add_shipment') }}" class="form-grid">
+<input name="tracking_no" placeholder="Tracking number" required>
+<select name="po_id" required><option value="">Purchase order</option>{% for p in purchase_orders %}<option value="{{ p.id }}">{{ p.po_number }}</option>{% endfor %}</select>
+<input name="carrier" placeholder="Carrier">
+<input name="shipped_date" type="date">
+<input name="expected_date" type="date">
+<select name="status"><option>In Transit</option><option>Delivered</option><option>Delayed</option><option>Cancelled</option></select>
+<button>Add Shipment</button>
+</form>
+</section>
+<section class="panel"><table>
+<tr><th>Tracking</th><th>PO</th><th>Supplier</th><th>Carrier</th><th>Expected</th><th>Status</th><th>Update</th></tr>
+{% for s in shipments %}
+<tr><td>{{ s.tracking_no }}</td><td>{{ s.po_number }}</td><td>{{ s.supplier_name }}</td><td>{{ s.carrier or "—" }}</td><td>{{ s.expected_date or "—" }}</td><td>{{ s.status }}</td>
+<td><form method="post" action="{{ url_for('update_shipment', shipment_id=s.id) }}" class="inline"><select name="status"><option>In Transit</option><option>Delivered</option><option>Delayed</option><option>Cancelled</option></select><button>Save</button></form></td></tr>
+{% endfor %}
+</table></section>
+{% endblock %}
