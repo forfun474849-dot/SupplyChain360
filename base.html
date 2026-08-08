@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}SupplyChain360{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('style_css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">SupplyChain<span>360</span></div>
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('inventory') }}">Inventory</a>
+    <a href="{{ url_for('suppliers') }}">Suppliers</a>
+    <a href="{{ url_for('orders') }}">Orders</a>
+    <a href="{{ url_for('shipments') }}">Shipments</a>
+    <a href="{{ url_for('risk') }}">Risk</a>
+  </nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer>SupplyChain360 · Open-source supply chain management starter · {{ current_year }}</footer>
+</body>
+</html>
